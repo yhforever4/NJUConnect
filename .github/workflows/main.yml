@@ -111,7 +111,7 @@ jobs:
           popd || exit 1
       
       - name: Upload release binary
-        if: github.event_name == 'release'
+        # if: github.event_name == 'release'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
