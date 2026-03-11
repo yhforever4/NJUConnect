@@ -2,6 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release Tag Name (e.g., v1.0.0)'
+        required: true
+        default: 'manual-build'
   release:
     types: [prereleased]
   push:
@@ -125,5 +130,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          gh release upload ${{ github.event.release.tag_name }} EasierConnect-${{ steps.get_filename.outputs.ASSET_NAME }}.zip
+          # gh release upload ${{ github.event.release.tag_name }} EasierConnect-${{ steps.get_filename.outputs.ASSET_NAME }}.zip
+          # 如果是手动触发，使用 inputs.tag_name；如果是 release 事件，使用 event.release.tag_name
+          TAG_NAME="${{ inputs.tag_name }}"
+          if [ -z "$TAG_NAME" ]; then
+            TAG_NAME="${{ github.event.release.tag_name }}"
+          fi
+
+          # 如果仍然为空（例如 push 事件），则报错或生成一个默认标签
+          if [ -z "$TAG_NAME" ]; then
+            echo "Error: No tag name provided for this event."
+            exit 1
+          fi
+
+          echo "Uploading to tag: $TAG_NAME"
+
+          # 确保 Release 存在
+          # 手动触发时通常没有 Release，需要先创建
+          # --generate-notes 会自动生成发布说明
+          gh release view "$TAG_NAME" || gh release create "$TAG_NAME" --generate-notes --target main
+
+          # 上传文件
+          gh release upload "$TAG_NAME" EasierConnect-${{ steps.get_filename.outputs.ASSET_NAME }}.zip --clobber
 
