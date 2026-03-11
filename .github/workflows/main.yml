@@ -103,13 +103,22 @@ jobs:
         if: matrix.goos == 'windows'
         run: |
           cd ./build_assets || exit 1
-          mv EasierConnect EasierConnect.exe
+          if [ -f EasierConnect ]; then
+            mv EasierConnect EasierConnect.exe
+          else
+            echo "EasierConnect binary not found!" >&2
+            exit 1
+          fi
       - name: Create ZIP archive
         run: |
           pushd build_assets || exit 1
           # zip -9vr ../EasierConnect-$ASSET_NAME.zip .
-          zip -9vr ../EasierConnect-$ASSET_NAME.zip EasierConnect.exe
-          popd || exit 1
+          if [ -f EasierConnect.exe ]; then
+            zip -9vr ../EasierConnect-$ASSET_NAME.zip EasierConnect.exe
+          else
+            echo "EasierConnect.exe not found, zip failed!" >&2
+            exit 1
+          fi
       
       - name: Upload release binary
         # if: github.event_name == 'release'
