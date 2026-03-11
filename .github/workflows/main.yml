@@ -107,7 +107,8 @@ jobs:
       - name: Create ZIP archive
         run: |
           pushd build_assets || exit 1
-          zip -9vr ../EasierConnect-$ASSET_NAME.zip .
+          # zip -9vr ../EasierConnect-$ASSET_NAME.zip .
+          zip -9vr ../EasierConnect-$ASSET_NAME.zip EasierConnect.exe
           popd || exit 1
       
       - name: Upload release binary
