@@ -22,7 +22,7 @@ jobs:
         # Include amd64 on all platforms.
         # goos: [windows, linux, darwin]
         # goarch: [amd64, 386]
-        goos: [windows, linux]
+        goos: [windows]
         goarch: [386]
         exclude:
           # Exclude i386 on darwin.
