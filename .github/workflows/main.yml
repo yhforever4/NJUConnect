@@ -40,11 +40,11 @@ jobs:
           #   goarch: arm
           #   goarm: 5
           # # END Linux ARM 5 6 7
-          # BEGIN Windows ARM 7
-          - goos: windows
-            goarch: arm
-            goarm: 7
-          # END Windows ARM 7
+          # # BEGIN Windows ARM 7
+          # - goos: windows
+          #   goarch: arm
+          #   goarm: 7
+          # # END Windows ARM 7
           # # BEGIN Other architectures
           # - goos: darwin
           #   goarch: arm64
